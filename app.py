@@ -109,7 +109,19 @@ st.sidebar.header("⚙️ Setup")
 st.sidebar.markdown(
     "Get a **free** Groq API key at [console.groq.com](https://console.groq.com)"
 )
-api_key = st.sidebar.text_input("Groq API Key", type="password")
+
+# Try to load a default key from .streamlit/secrets.toml.
+# If it's not set up, this just falls back to an empty string
+# and the user can type their own key in the sidebar instead.
+default_api_key = st.secrets.get("GROQ_API_KEY", "")
+
+api_key = st.sidebar.text_input(
+    "Groq API Key",
+    value=default_api_key,
+    type="password",
+    help="Auto-filled from .streamlit/secrets.toml if available. You can override it here.",
+)
+
 uploaded_file = st.sidebar.file_uploader("Upload a PDF", type="pdf")
 
 if uploaded_file and api_key:
