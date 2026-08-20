@@ -106,21 +106,12 @@ Answer:"""
 
 # ---------------- Streamlit UI ----------------
 st.sidebar.header("⚙️ Setup")
-st.sidebar.markdown(
-    "Get a **free** Groq API key at [console.groq.com](https://console.groq.com)"
-)
 
-# Try to load a default key from .streamlit/secrets.toml.
-# If it's not set up, this just falls back to an empty string
-# and the user can type their own key in the sidebar instead.
-default_api_key = st.secrets.get("GROQ_API_KEY", "")
+# API key is loaded directly from .streamlit/secrets.toml — no user input needed.
+api_key = st.secrets.get("GROQ_API_KEY", "")
 
-api_key = st.sidebar.text_input(
-    "Groq API Key",
-    value=default_api_key,
-    type="password",
-    help="Auto-filled from .streamlit/secrets.toml if available. You can override it here.",
-)
+if not api_key:
+    st.sidebar.error("⚠️ GROQ_API_KEY not found in .streamlit/secrets.toml")
 
 uploaded_file = st.sidebar.file_uploader("Upload a PDF", type="pdf")
 
@@ -156,4 +147,4 @@ if "chunks" in st.session_state:
                 st.write(chunk)
                 st.divider()
 else:
-    st.info("👈 Enter your Groq API key and upload a PDF to get started.")
+    st.info("👈 Upload a PDF to get started.")
